@@ -1,0 +1,27 @@
+{
+  "name": "lottery-dapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pacant/Lottery-dApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pacant/Lottery-dApp/issues"
+  },
+  "homepage": "https://github.com/pacant/Lottery-dApp#readme",
+  "dependencies": {
+    "@truffle/contract": "^4.5.15",
+    "lite-server": "^2.6.1",
+    "web3": "^1.7.4"
+  }
+}

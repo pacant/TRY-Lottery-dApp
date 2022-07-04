@@ -1,0 +1,359 @@
+{
+  "contractName": "ERC721Metadata",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "_symbol",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Optional metadata extension for ERC-721 non-fungible token standard. See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md.\",\"kind\":\"dev\",\"methods\":{\"name()\":{\"details\":\"Returns a descriptive name for a collection of NFTs in this contract.\",\"returns\":{\"_name\":\"Representing name.\"}},\"symbol()\":{\"details\":\"Returns a abbreviated name for a collection of NFTs in this contract.\",\"returns\":{\"_symbol\":\"Representing symbol.\"}},\"tokenURI(uint256)\":{\"details\":\"Returns a distinct Uniform Resource Identifier (URI) for a given asset. It Throws if `_tokenId` is not a valid NFT. URIs are defined in RFC3986. The URI may point to a JSON file that conforms to the \\\"ERC721 Metadata JSON Schema\\\".\",\"returns\":{\"_0\":\"URI of _tokenId.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/erc721-metadata.sol\":\"ERC721Metadata\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/erc721-metadata.sol\":{\"keccak256\":\"0xcfc0a167050f23a3f92853c3fbbdddbcc6d225c77cd3e64652c767ee25fa7ca1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://00b56ac60fb17e8952ac722c6cb5254f999bc9f58c7369882f5c0335f1720252\",\"dweb:/ipfs/QmQPKw5NNyoiSKzQptxEdQ1cUZFgAeuKPsjcuMN4zpFDYJ\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n/**\n * @dev Optional metadata extension for ERC-721 non-fungible token standard.\n * See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md.\n */\ninterface ERC721Metadata\n{\n\n  /**\n   * @dev Returns a descriptive name for a collection of NFTs in this contract.\n   * @return _name Representing name.\n   */\n  function name()\n    external\n    view\n    returns (string memory _name);\n\n  /**\n   * @dev Returns a abbreviated name for a collection of NFTs in this contract.\n   * @return _symbol Representing symbol.\n   */\n  function symbol()\n    external\n    view\n    returns (string memory _symbol);\n\n  /**\n   * @dev Returns a distinct Uniform Resource Identifier (URI) for a given asset. It Throws if\n   * `_tokenId` is not a valid NFT. URIs are defined in RFC3986. The URI may point to a JSON file\n   * that conforms to the \"ERC721 Metadata JSON Schema\".\n   * @return URI of _tokenId.\n   */\n  function tokenURI(uint256 _tokenId)\n    external\n    view\n    returns (string memory);\n\n}\n",
+  "sourcePath": "/Users/antoniopace/Desktop/Lottery-dAPP/contracts/erc721-metadata.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/erc721-metadata.sol",
+    "exportedSymbols": {
+      "ERC721Metadata": [
+        174
+      ]
+    },
+    "id": 175,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 152,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:2"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ERC721Metadata",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 153,
+          "nodeType": "StructuredDocumentation",
+          "src": "57:153:2",
+          "text": " @dev Optional metadata extension for ERC-721 non-fungible token standard.\n See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md."
+        },
+        "fullyImplemented": false,
+        "id": 174,
+        "linearizedBaseContracts": [
+          174
+        ],
+        "name": "ERC721Metadata",
+        "nameLocation": "221:14:2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 154,
+              "nodeType": "StructuredDocumentation",
+              "src": "241:127:2",
+              "text": " @dev Returns a descriptive name for a collection of NFTs in this contract.\n @return _name Representing name."
+            },
+            "functionSelector": "06fdde03",
+            "id": 159,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "name",
+            "nameLocation": "380:4:2",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 155,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "384:2:2"
+            },
+            "returnParameters": {
+              "id": 158,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 157,
+                  "mutability": "mutable",
+                  "name": "_name",
+                  "nameLocation": "436:5:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 159,
+                  "src": "422:19:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 156,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "422:6:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "421:21:2"
+            },
+            "scope": 174,
+            "src": "371:72:2",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 160,
+              "nodeType": "StructuredDocumentation",
+              "src": "447:131:2",
+              "text": " @dev Returns a abbreviated name for a collection of NFTs in this contract.\n @return _symbol Representing symbol."
+            },
+            "functionSelector": "95d89b41",
+            "id": 165,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "symbol",
+            "nameLocation": "590:6:2",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 161,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "596:2:2"
+            },
+            "returnParameters": {
+              "id": 164,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 163,
+                  "mutability": "mutable",
+                  "name": "_symbol",
+                  "nameLocation": "648:7:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 165,
+                  "src": "634:21:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 162,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "634:6:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "633:23:2"
+            },
+            "scope": 174,
+            "src": "581:76:2",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 166,
+              "nodeType": "StructuredDocumentation",
+              "src": "661:289:2",
+              "text": " @dev Returns a distinct Uniform Resource Identifier (URI) for a given asset. It Throws if\n `_tokenId` is not a valid NFT. URIs are defined in RFC3986. The URI may point to a JSON file\n that conforms to the \"ERC721 Metadata JSON Schema\".\n @return URI of _tokenId."
+            },
+            "functionSelector": "c87b56dd",
+            "id": 173,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "tokenURI",
+            "nameLocation": "962:8:2",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 169,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 168,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "979:8:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 173,
+                  "src": "971:16:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 167,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "971:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "970:18:2"
+            },
+            "returnParameters": {
+              "id": 172,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 171,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 173,
+                  "src": "1024:13:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 170,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1024:6:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1023:15:2"
+            },
+            "scope": 174,
+            "src": "953:86:2",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 175,
+        "src": "211:831:2",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:1011:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.15+commit.e14f2714.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.8",
+  "updatedAt": "2022-07-04T09:23:04.659Z",
+  "devdoc": {
+    "details": "Optional metadata extension for ERC-721 non-fungible token standard. See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md.",
+    "kind": "dev",
+    "methods": {
+      "name()": {
+        "details": "Returns a descriptive name for a collection of NFTs in this contract.",
+        "returns": {
+          "_name": "Representing name."
+        }
+      },
+      "symbol()": {
+        "details": "Returns a abbreviated name for a collection of NFTs in this contract.",
+        "returns": {
+          "_symbol": "Representing symbol."
+        }
+      },
+      "tokenURI(uint256)": {
+        "details": "Returns a distinct Uniform Resource Identifier (URI) for a given asset. It Throws if `_tokenId` is not a valid NFT. URIs are defined in RFC3986. The URI may point to a JSON file that conforms to the \"ERC721 Metadata JSON Schema\".",
+        "returns": {
+          "_0": "URI of _tokenId."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
