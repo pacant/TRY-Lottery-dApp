@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "./cryptoducks.sol";
 
 contract LotteryTry {
-    address manager;
+    address public manager;
 
     struct Round {
         bool active;
@@ -20,15 +20,18 @@ contract LotteryTry {
     uint256 M;
 
     event Ticket(uint256[6] _ticket);
+    event WinningTicket(uint256[6] _ticket);
+    event LotteryCreated(bool created);
+    event RoundState(bool round_state);
     event Prize(address addr, string uri, uint256 class);
     event Revenues(uint256 balance);
     event Players(Player[] players);
 
-    Player[] players;
+    Player[] public players;
     Round round;
 
-    bool lotteryUp;
-    uint256[6] winnerNumbers;
+    bool public lotteryUp;
+    uint256[6] public winnerNumbers;
     uint256 tokenIdCounter;
 
     address DKSAddress;
@@ -43,12 +46,8 @@ contract LotteryTry {
     /*
     Set the lottery manager at contract creation. Takes M and the address of NFT contract as arguments
     */
-    constructor(uint256 m, address addr) {
-        manager = msg.sender;
-        round = Round(false, true);
-        M = m;
+    constructor(address addr) {
         DKSAddress = addr;
-        lotteryUp = true;
     }
 
     /*
@@ -57,6 +56,14 @@ contract LotteryTry {
     modifier onlyManager() {
         require(msg.sender == manager);
         _;
+    }
+
+    function createLottery(uint256 m) public onlyManager {
+        manager = msg.sender;
+        round = Round(false, true);
+        M = m;
+        lotteryUp = true;
+        emit LotteryCreated(true);
     }
 
     /*
@@ -68,6 +75,7 @@ contract LotteryTry {
         require(round.finished, "round is already started");
         round.finished = false;
         round.active = true;
+        emit RoundState(true);
         firstBlock = block.number;
     }
 
@@ -87,6 +95,7 @@ contract LotteryTry {
         // check if M blocks has passed
         if (block.number - firstBlock >= M) {
             round.active = false;
+            emit RoundState(false);
             if (block.number - firstBlock > M) success = false;
         }
         for (uint256 i = 0; i < ticket.length - 1; i++) {
@@ -135,7 +144,7 @@ contract LotteryTry {
                 else winnerNumbers[i] = random(26, i + players.length);
             } while (checkDuplicates(winnerNumbers[i], winnerNumbers, i)); // i don't want duplicates
         }
-        emit Ticket(winnerNumbers);
+        emit WinningTicket(winnerNumbers);
     }
 
     /*
@@ -306,6 +315,10 @@ contract LotteryTry {
     function transferDKS(address _to, uint256 _tokenId) private {
         Cryptoducks DKS = Cryptoducks(DKSAddress);
         DKS.transfer(manager, _to, _tokenId);
+    }
+
+    function getRoundState() public view returns (bool) {
+        return (round.active);
     }
     /*
 
