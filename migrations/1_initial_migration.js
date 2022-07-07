@@ -8,6 +8,6 @@ const M = 3;
 module.exports = function (deployer) {
   deployer.deploy(Migrations);
   deployer.deploy(NFT).then(function () {
-    return deployer.deploy(Lottery, M, NFT.address);
+    return deployer.deploy(Lottery, NFT.address);
   });
 };

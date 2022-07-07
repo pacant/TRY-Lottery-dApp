@@ -1,34 +1,67 @@
+<!DOCTYPE html>
+
 <html>
 
 <head>
     <title>Home</title>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 
-    <!-- Bootstrap and jQuery -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <!-- Web3 and truffle-contract -->
-    <script src="./dist/web3.min.js"></script>
-    <script src="./dist/truffle-contract.js"></script>
-    <!-- The App script -->
-    <script src="js/app.js"></script>
+
     <style>
         body {
-            background-image: url(https://i.postimg.cc/YSgCg909/mare2.jpg);
+            background-image: url(https://i.postimg.cc/sDMzkkBR/try2.png);
             background-size: cover;
+        }
+
+        .btn {
+            background-color: #f0a00c;
+            color: black;
+        }
+
+        h3 {
+            color: white
         }
     </style>
 
 </head>
 
 <body>
+    <div class="container" id="managerUI">
+        <div class="row ">
+            <div class="col text-center mt-5" id="create_lottery_m">
+                <button type="button" class="btn" onclick="createLottery()"
+                    style="margin-top: 350px; margin-left: 20px;">Create the
+                    lottery!</button>
+            </div>
+        </div>
+    </div>
 
+    <div class="container" style="margin-top: 350px; margin-left: 80px;" id="playerUI">
+        <div class="row ">
+            <div class="col text-center mt-5">
+                <h3 id="player_lottery">Lottery closed for now</h3>
+                <button type="button" class="btn mt-2" onclick="window.location.reload()" id="home_button">Retry
+                    :(</button>
+                <button type="button" class="btn mt-2" onclick="window.location.href='lottery.html';"
+                    id="enter_lottery">Enter</a>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Web3 and truffle-contract -->
+    <script type="text/javascript" src="./dist/web3.min.js"></script>
+    <script type="text/javascript" src="./dist/truffle-contract.js"></script>
+    <!-- The App script -->
+    <script type="text/javascript" src="js/app.js"></script>
 </body>
 
 </html>

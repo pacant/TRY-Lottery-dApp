@@ -48,6 +48,7 @@ contract LotteryTry {
     */
     constructor(address addr) {
         DKSAddress = addr;
+        manager = msg.sender;
     }
 
     /*
@@ -59,7 +60,7 @@ contract LotteryTry {
     }
 
     function createLottery(uint256 m) public onlyManager {
-        manager = msg.sender;
+        require(!lotteryUp, "Lottery already up");
         round = Round(false, true);
         M = m;
         lotteryUp = true;
