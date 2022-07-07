@@ -158,6 +158,7 @@ function startNewRound() {
     // functions of the contract
     App.contracts["Contract"].deployed().then(async (instance) => {
         await instance.startNewRound({ from: App.account });
+        window.location.reload();
     });
 }
 // Call init whenever the window loads
