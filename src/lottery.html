@@ -20,6 +20,15 @@
     <!-- The App script -->
     <script src="js/app.js"></script>
     <style>
+        .vertical-scrollable>.row {
+            position: absolute;
+            top: 120px;
+            bottom: 100px;
+            left: 180px;
+            width: 50%;
+            overflow-y: scroll;
+        }
+
         body {
             background-image: url(https://i.postimg.cc/NMXfvZCM/TRYback.png);
             background-size: cover;
@@ -33,6 +42,10 @@
         .btn {
             background-color: #d39139;
             color: black;
+        }
+
+        p {
+            color: white
         }
     </style>
 </head>
@@ -57,14 +70,33 @@
             </div>
         </div>
     </nav>
+    <div class="alert alert-danger" id="error" style="display:none" role="alert">
+    </div>
     <div class="container mrg w-50" id="playerUI">
         <div class="col">
             <ul class="list-group">
                 <li class="list-group-item" id="lottery_state">Lottery up: </li>
                 <li class="list-group-item" id="round_state">Round Active: </li>
-                <li class="list-group-item" id="tickets_number">Number of tickets: </li>
+                <li class="list-group-item" id="tickets_number">Number of total tickets: </li>
                 <li class="list-group-item" id="nft_assigned">NFTs assigned: </li>
                 <li class="list-group-item" id="winning_numbers">Winning numbers: </li>
+
+            </ul>
+        </div>
+        <label for="basic-url" class="form-label mt-2 mx-5" style="color: white;">Insert five numbers (1-69) and the
+            powerball (1-26),
+            separated by a
+            comma.</label>
+        <div class="input-group mb-3" style="width: 50%; margin-left: 150px;">
+            <span class="input-group-text" id="basic-addon1">610'000 gwei</span>
+            <input id="input_ticket" type="text" class="form-control" placeholder="1,2,3,4,5,6"
+                aria-label="input_ticket" aria-describedby="basic-addon1"> <button type="button" class="btn"
+                onclick="buyTicket()">Buy</button>
+        </div>
+        <div class="col-12 ">
+            <ul class="list-group" id="tickets_list" style="overflow:scroll; max-height: 200px;">
+
+
             </ul>
         </div>
     </div>
@@ -74,13 +106,16 @@
             <ul class="list-group">
                 <li class="list-group-item" id="lottery_state_m">Lottery up: </li>
                 <li class="list-group-item" id="round_state_m">Round Active: </li>
-                <li class="list-group-item" id="tickets_number_m">Number of tickets: </li>
+                <li class="list-group-item" id="tickets_number_m">Number of total tickets: </li>
                 <li class="list-group-item" id="nft_assigned_m">NFTs assigned: </li>
                 <li class="list-group-item" id="winning_numbers_m">Winning numbers: </li>
-                <button type="button" class="btn" onclick="startNewRound()">Start a new round</button>
             </ul>
         </div>
+        <button type="button" class="btn mt-4 mx-3" onclick="startNewRound()">Start a new round</button>
+        <button type="button" class="btn mt-4 mx-3" onclick="drawNumbers()">DrawNumbers</button>
+
     </div>
+
 
 </body>
 

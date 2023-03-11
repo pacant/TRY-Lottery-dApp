@@ -44,7 +44,7 @@ contract LotteryTry {
     mapping(uint256 => DKStoken) DKSuri; // mapping from nft class to uri-id
 
     /*
-    Set the lottery manager at contract creation. Takes M and the address of NFT contract as arguments
+    Set the lottery manager at contract creation. Takes the address of NFT contract as arguments
     */
     constructor(address addr) {
         DKSAddress = addr;
@@ -82,7 +82,7 @@ contract LotteryTry {
 
     /*
     Function for buying a ticket, takes a uint[] array with 6 elements as argument. 
-    The flast one is the powerball.
+    The last one is the powerball.
         ex buy([63,24,32,12,69,1])
     Round should be active
     Lottery ticket numbers required in a range from 1 to 69
@@ -123,11 +123,10 @@ contract LotteryTry {
     Aux function that generate a random uint in a range, hashing difficulty and timestamp of the block.
         ex. random(99) generate a number from 1 to 99
     */
-    function random(uint256 range, uint256 seed)
-        private
-        view
-        returns (uint256)
-    {
+    function random(
+        uint256 range,
+        uint256 seed
+    ) private view returns (uint256) {
         return
             (uint256(keccak256(abi.encode(block.timestamp, seed))) % range) + 1;
     }
@@ -278,7 +277,6 @@ contract LotteryTry {
     cryptoduck can mint an NFT,and only the manager of the lottery can use 
     this function. So they are the same person. When you mint a Cryptoduck, you have to specify;
 
-    -address of the nft contract
     -owner of the minted nft
     -unique token id (START FROM 1)
     -uri of an img or a description
@@ -320,6 +318,38 @@ contract LotteryTry {
 
     function getRoundState() public view returns (bool) {
         return (round.active);
+    }
+
+    function getNumTickets() public view returns (uint256) {
+        return (players.length);
+    }
+
+    function getTicket(uint256 k) public view returns (uint256[6] memory) {
+        uint256[6] memory result;
+        uint256 i = 0;
+        for (uint256 j = 0; j < players.length; j++) {
+            if (players[j].addr == msg.sender) {
+                if (i == k) {
+                    result = players[j].ticket;
+                    break;
+                } else i++;
+            }
+        }
+        return (result);
+    }
+
+    function getNumTicketsByPlayer() public view returns (uint256) {
+        uint256 result;
+        for (uint256 i = 0; i < players.length; i++) {
+            if (players[i].addr == msg.sender) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    function getWinningNumbers() public view returns (uint256[6] memory) {
+        return (winnerNumbers);
     }
     /*
 
