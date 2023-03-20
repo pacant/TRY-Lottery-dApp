@@ -17,31 +17,33 @@ contract LotteryTry {
     }
 
     uint256 firstBlock;
-    uint256 M;
+    uint32 M;
 
-    event Ticket(uint256[6] _ticket);
     event WinningTicket(uint256[6] _ticket);
-    event LotteryCreated(bool created);
+    event LotteryCreated();
     event RoundState(bool round_state);
-    event Prize(address addr, string uri, uint256 class);
+    event Prize(address addr, uint256 token, uint8 class);
     event Revenues(uint256 balance);
-    event Players(Player[] players);
+    event LotteryClosed();
 
     Player[] public players;
     Round round;
 
     bool public lotteryUp;
-    uint256[6] public winnerNumbers;
-    uint256 tokenIdCounter;
+    uint256[6] public winnerNumbers; // the winning ticket!
+    uint256 tokenIdCounter; // counter for token ID for NFTs
+    bool minted = false; // if NFT are already been minted
 
     address DKSAddress;
 
+    // NFT represented with a struct: ID, uri and if it's assigned to a user
     struct DKStoken {
         uint256 tokenId;
         string uri;
         bool assigned;
     }
-    mapping(uint256 => DKStoken) DKSuri; // mapping from nft class to uri-id
+    mapping(uint8 => DKStoken) DKSuri; // mapping from nft class to uri-id
+    mapping(address => DKStoken[]) playerPrize;
 
     /*
     Set the lottery manager at contract creation. Takes the address of NFT contract as arguments
@@ -59,17 +61,27 @@ contract LotteryTry {
         _;
     }
 
-    function createLottery(uint256 m) public onlyManager {
+    function createLottery(uint32 m) public onlyManager {
         require(!lotteryUp, "Lottery already up");
         round = Round(false, true);
         M = m;
         lotteryUp = true;
-        emit LotteryCreated(true);
+        emit LotteryCreated();
+        if (!minted) {
+            mintDKS(manager, 1, "https://i.ibb.co/Fsf0dVp/Crypto-Duck1.png", 1);
+            mintDKS(manager, 2, "https://i.ibb.co/qmFHQb6/Crypto-Duck2.png", 2);
+            mintDKS(manager, 3, "https://i.ibb.co/S6Nh6Gs/Crypto-Duck3.png", 3);
+            mintDKS(manager, 4, "https://i.ibb.co/wQmmK4z/Crypto-Duck4.png", 4);
+            mintDKS(manager, 5, "https://i.ibb.co/H2GrX5c/Crypto-Duck5.png", 5);
+            mintDKS(manager, 6, "https://i.ibb.co/qC6Pf9G/Crypto-Duck6.png", 6);
+            mintDKS(manager, 7, "https://i.ibb.co/TKBsJPM/Crypto-Duck7.png", 7);
+            mintDKS(manager, 8, "https://i.ibb.co/FhVv7vv/Crypto-Duck8.png", 8);
+            minted = true;
+        }
     }
 
     /*
     checks if the previous round is finished, and, if that's the case, starts a new round.
-    takes M as argument.
     */
     function startNewRound() public onlyManager {
         require(lotteryUp, "Lottery closed!");
@@ -78,6 +90,7 @@ contract LotteryTry {
         round.active = true;
         emit RoundState(true);
         firstBlock = block.number;
+        winnerNumbers = [0, 0, 0, 0, 0, 0];
     }
 
     /*
@@ -87,6 +100,8 @@ contract LotteryTry {
     Round should be active
     Lottery ticket numbers required in a range from 1 to 69
     Lottery ticket price required: 0,00061 ether =  610'000 gwei = around 1 euro
+
+    you should choose 6 different numbers!
     */
     function buy(uint256[6] memory ticket) public payable {
         require(lotteryUp, "Lottery closed!");
@@ -99,11 +114,12 @@ contract LotteryTry {
             emit RoundState(false);
             if (block.number - firstBlock > M) success = false;
         }
-        for (uint256 i = 0; i < ticket.length - 1; i++) {
+        for (uint32 i = 0; i < ticket.length - 1; i++) {
             require(
                 ticket[i] > 0 && ticket[i] < 70,
                 "choose numbers between 1 and 69"
             );
+            require(checkPlayerTicket(i,ticket),"duplicates number in the ticket");
         }
         require(
             ticket[ticket.length - 1] > 0 && ticket[ticket.length - 1] < 27,
@@ -114,8 +130,6 @@ contract LotteryTry {
         if (success) {
             Player memory player = Player(msg.sender, ticket);
             players.push(player);
-            emit Ticket(ticket);
-            emit Players(players);
         }
     }
 
@@ -155,10 +169,23 @@ contract LotteryTry {
         uint256[6] memory array,
         uint256 index
     ) private pure returns (bool) {
-        for (uint256 i = 0; i < index; i++) {
+        for (uint32 i = 0; i < index; i++) {
             if (check == array[i]) return true;
         }
         return false;
+    }
+
+    /*
+    Check that the player don't choose equal numbers in a ticket, for every item passed
+    */
+    function checkPlayerTicket(
+        uint256 index,
+        uint256[6] memory ticket,
+    ) private pure returns (bool) {
+        for (uint32 i = 0; i < ticket.length & i != index; i++){
+            if(ticket[index] == ticket[i]) return false;
+        }
+        return true;
     }
 
     // distribute the prizes
@@ -167,10 +194,11 @@ contract LotteryTry {
         require(!round.active, "round still active");
         require(!round.finished, "round finished");
         bool powerball;
-        uint256 commonElements;
-        for (uint256 i = 0; i < players.length; i++) {
+        uint32 commonElements;
+        uint256 tokenToAssign;
+        for (uint32 i = 0; i < players.length; i++) {
             powerball = false;
-            uint256 class = 0;
+            uint8 class = 0;
             if (winnerNumbers[5] == players[i].ticket[5]) powerball = true;
             commonElements = findCommonElements(
                 winnerNumbers,
@@ -213,17 +241,23 @@ contract LotteryTry {
             }
             if (class != 0) {
                 if (DKSuri[class].assigned) {
+                    tokenToAssign = tokenIdCounter; // the next token id assignable
                     mintOnDemand(
                         players[i].addr,
-                        tokenIdCounter,
+                        tokenToAssign,
                         DKSuri[class].uri
                     ); // mint
                     tokenIdCounter++;
                 } else {
-                    transferDKS(players[i].addr, DKSuri[class].tokenId);
+                    tokenToAssign = DKSuri[class].tokenId; // one of the first minted nfts
+                    transferDKS(
+                        players[i].addr,
+                        tokenToAssign,
+                        DKSuri[class].uri
+                    );
                     DKSuri[class].assigned = true;
                 } //transfer and flag assigned
-                emit Prize(players[i].addr, DKSuri[class].uri, class);
+                emit Prize(players[i].addr, tokenToAssign, class);
             }
         }
         round.finished = true; // end the round
@@ -236,10 +270,10 @@ contract LotteryTry {
     function findCommonElements(
         uint256[6] memory array,
         uint256[6] memory ticket
-    ) private pure returns (uint256) {
-        uint256 commonElements = 0;
-        for (uint256 i = 0; i < array.length - 1; i++) {
-            for (uint256 j = 1; j < ticket.length; j++) {
+    ) private pure returns (uint32) {
+        uint32 commonElements = 0;
+        for (uint32 i = 0; i < array.length - 1; i++) {
+            for (uint32 j = 0; j < ticket.length - 1; j++) {
                 if (array[i] == ticket[j]) {
                     commonElements++;
                     continue;
@@ -253,6 +287,7 @@ contract LotteryTry {
     Function to withdraw the revenue of the tickets
     */
     function withdraw(address addr) public onlyManager {
+        require(round.finished, "can't withdraw if round is not finished");
         emit Revenues(address(this).balance);
         payable(addr).transfer(address(this).balance);
     }
@@ -264,12 +299,17 @@ contract LotteryTry {
     deactivate the lottery contract
     */
     function closeLottery() public onlyManager {
+        require(lotteryUp, "Lottery already closed");
         if (!round.finished) {
-            for (uint256 i = 0; i < players.length; i++) {
-                payable(players[i].addr).transfer(0.0056 ether);
+            for (uint32 i = 0; i < players.length; i++) {
+                payable(players[i].addr).transfer(0.00061 ether);
             }
         }
+        round.active = false;
+        round.finished = true;
+        if (players.length > 0) delete players;
         lotteryUp = false;
+        emit LotteryClosed();
     }
 
     /*
@@ -287,7 +327,7 @@ contract LotteryTry {
         address _to,
         uint256 _tokenId,
         string memory _uri,
-        uint256 class
+        uint8 class
     ) public onlyManager {
         tokenIdCounter = _tokenId + 1;
         Cryptoducks DKS = Cryptoducks(DKSAddress);
@@ -306,28 +346,44 @@ contract LotteryTry {
     ) private {
         Cryptoducks DKS = Cryptoducks(DKSAddress);
         DKS.mint(_to, _tokenId, _uri);
+        DKStoken memory temp = DKStoken(_tokenId, _uri, true);
+        playerPrize[_to].push(temp);
     }
 
     /*
     function for transfer NFT
     */
-    function transferDKS(address _to, uint256 _tokenId) private {
+    function transferDKS(
+        address _to,
+        uint256 _tokenId,
+        string memory _uri
+    ) private {
         Cryptoducks DKS = Cryptoducks(DKSAddress);
         DKS.transfer(manager, _to, _tokenId);
+        DKStoken memory temp = DKStoken(_tokenId, _uri, true);
+        playerPrize[_to].push(temp);
     }
 
     function getRoundState() public view returns (bool) {
         return (round.active);
     }
 
+    function getRoundStateFinished() public view returns (bool) {
+        return (round.finished);
+    }
+
+    function getM() public view returns (uint32) {
+        return (M);
+    }
+
     function getNumTickets() public view returns (uint256) {
         return (players.length);
     }
 
-    function getTicket(uint256 k) public view returns (uint256[6] memory) {
+    function getTicket(uint32 k) public view returns (uint256[6] memory) {
         uint256[6] memory result;
-        uint256 i = 0;
-        for (uint256 j = 0; j < players.length; j++) {
+        uint32 i = 0;
+        for (uint32 j = 0; j < players.length; j++) {
             if (players[j].addr == msg.sender) {
                 if (i == k) {
                     result = players[j].ticket;
@@ -338,9 +394,9 @@ contract LotteryTry {
         return (result);
     }
 
-    function getNumTicketsByPlayer() public view returns (uint256) {
-        uint256 result;
-        for (uint256 i = 0; i < players.length; i++) {
+    function getNumTicketsByPlayer() public view returns (uint32) {
+        uint32 result;
+        for (uint32 i = 0; i < players.length; i++) {
             if (players[i].addr == msg.sender) {
                 result++;
             }
@@ -351,8 +407,12 @@ contract LotteryTry {
     function getWinningNumbers() public view returns (uint256[6] memory) {
         return (winnerNumbers);
     }
-    /*
 
+    function getPrizes(uint256 k) public view returns (string memory) {
+        return playerPrize[msg.sender][k].uri;
+    }
 
-    */
+    function getNumPrizes() public view returns (uint256) {
+        return playerPrize[msg.sender].length;
+    }
 }

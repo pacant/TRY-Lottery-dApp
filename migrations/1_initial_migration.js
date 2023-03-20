@@ -11,3 +11,4 @@ module.exports = function (deployer) {
     return deployer.deploy(Lottery, NFT.address);
   });
 };
+

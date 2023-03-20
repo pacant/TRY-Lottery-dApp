@@ -35,7 +35,7 @@
         }
 
         .mrg {
-            margin-top: 180px;
+            margin-top: 50px;
             margin-right: 90px;
         }
 
@@ -74,11 +74,14 @@
     </div>
     <div class="container mrg w-50" id="playerUI">
         <div class="col">
+            <div class="col-12 ">
+                <ul class="list-group" id="prizes" style="white-space:nowrap; display: inline; max-height: 200px;">
+                </ul>
+            </div>
             <ul class="list-group">
                 <li class="list-group-item" id="lottery_state">Lottery up: </li>
                 <li class="list-group-item" id="round_state">Round Active: </li>
                 <li class="list-group-item" id="tickets_number">Number of total tickets: </li>
-                <li class="list-group-item" id="nft_assigned">NFTs assigned: </li>
                 <li class="list-group-item" id="winning_numbers">Winning numbers: </li>
 
             </ul>
@@ -95,24 +98,24 @@
         </div>
         <div class="col-12 ">
             <ul class="list-group" id="tickets_list" style="overflow:scroll; max-height: 200px;">
-
-
             </ul>
         </div>
     </div>
 
-    <div class="container mrg w-50" id="managerUI">
-        <div class="col">
-            <ul class="list-group">
-                <li class="list-group-item" id="lottery_state_m">Lottery up: </li>
-                <li class="list-group-item" id="round_state_m">Round Active: </li>
-                <li class="list-group-item" id="tickets_number_m">Number of total tickets: </li>
-                <li class="list-group-item" id="nft_assigned_m">NFTs assigned: </li>
-                <li class="list-group-item" id="winning_numbers_m">Winning numbers: </li>
-            </ul>
-        </div>
-        <button type="button" class="btn mt-4 mx-3" onclick="startNewRound()">Start a new round</button>
-        <button type="button" class="btn mt-4 mx-3" onclick="drawNumbers()">DrawNumbers</button>
+    <div class="container mrg w-50" id="managerUI"">
+        <div class=" col">
+        <ul class="list-group">
+            <li class="list-group-item" id="lottery_state_m">Lottery: </li>
+            <li class="list-group-item" id="round_state_m">Round: </li>
+            <li class="list-group-item" id="tickets_number_m">Number of total tickets: </li>
+            <li class="list-group-item" id="winning_numbers_m">Winning numbers: </li>
+        </ul>
+    </div>
+    <button type="button" class="btn mt-4 mx-3" onclick="startNewRound()">Start a new round</button>
+    <button type="button" class="btn mt-4 mx-3" onclick="drawNumbers()">DrawNumbers</button>
+    <button type="button" class="btn mt-4 mx-3" onclick="givePrizes()">Give Prizes!</button>
+    <button type="button" class="btn mt-4 mx-3" onclick="closeLottery()">Close the lottery</button>
+    <button type="button" class="btn mt-4 mx-3" onclick="withdraw()">Withdraw</button>
 
     </div>
 
