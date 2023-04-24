@@ -6,11 +6,6 @@ import "./cryptoducks.sol";
 contract LotteryTry {
     address public manager;
 
-    struct Round {
-        bool active;
-        bool finished;
-    }
-
     struct Player {
         address addr;
         uint256[6] ticket;
@@ -27,8 +22,8 @@ contract LotteryTry {
     event LotteryClosed();
 
     Player[] public players;
-    Round round;
 
+    uint8 round = 0; // 0: finished, 1: active, 2: unactive
     bool public lotteryUp;
     uint256[6] public winnerNumbers; // the winning ticket!
     uint256 tokenIdCounter; // counter for token ID for NFTs
@@ -63,7 +58,7 @@ contract LotteryTry {
 
     function createLottery(uint32 m) public onlyManager {
         require(!lotteryUp, "Lottery already up");
-        round = Round(false, true);
+        round = 0;
         M = m;
         lotteryUp = true;
         emit LotteryCreated();
@@ -85,9 +80,8 @@ contract LotteryTry {
     */
     function startNewRound() public onlyManager {
         require(lotteryUp, "Lottery closed!");
-        require(round.finished, "round is already started");
-        round.finished = false;
-        round.active = true;
+        require(round == 0, "round is already started");
+        round = 1;
         emit RoundState(true);
         firstBlock = block.number;
         winnerNumbers = [0, 0, 0, 0, 0, 0];
@@ -106,11 +100,11 @@ contract LotteryTry {
     function buy(uint256[6] memory ticket) public payable {
         require(lotteryUp, "Lottery closed!");
         require(ticket.length == 6, "choose 6 numbers!");
-        require(round.active, "round not active");
+        require(round == 1, "round not active");
         bool success = true;
         // check if M blocks has passed
         if (block.number - firstBlock >= M) {
-            round.active = false;
+            round = 2;
             emit RoundState(false);
             if (block.number - firstBlock > M) success = false;
         }
@@ -119,7 +113,10 @@ contract LotteryTry {
                 ticket[i] > 0 && ticket[i] < 70,
                 "choose numbers between 1 and 69"
             );
-            require(checkPlayerTicket(i,ticket),"duplicates number in the ticket");
+            require(
+                checkPlayerTicket(i, ticket),
+                "duplicates number in the ticket"
+            );
         }
         require(
             ticket[ticket.length - 1] > 0 && ticket[ticket.length - 1] < 27,
@@ -150,8 +147,8 @@ contract LotteryTry {
     */
     function drawNumbers() public onlyManager {
         require(lotteryUp, "Lottery closed!");
-        require(!round.active, "round is still active!");
-        require(!round.finished, "round finished");
+        require(round != 1, "round is still active!");
+        require(round != 0, "round finished");
         for (uint256 i = 0; i < 6; i++) {
             do {
                 if (i != 5) winnerNumbers[i] = random(69, i + players.length);
@@ -180,10 +177,10 @@ contract LotteryTry {
     */
     function checkPlayerTicket(
         uint256 index,
-        uint256[6] memory ticket,
+        uint256[6] memory ticket
     ) private pure returns (bool) {
-        for (uint32 i = 0; i < ticket.length & i != index; i++){
-            if(ticket[index] == ticket[i]) return false;
+        for (uint32 i = 0; (i < ticket.length) && (i != index); i++) {
+            if (ticket[index] == ticket[i]) return false;
         }
         return true;
     }
@@ -191,8 +188,8 @@ contract LotteryTry {
     // distribute the prizes
     function givePrizes() public onlyManager {
         require(lotteryUp, "Lottery closed!");
-        require(!round.active, "round still active");
-        require(!round.finished, "round finished");
+        require(round != 1, "round still active");
+        require(round != 0, "round finished");
         bool powerball;
         uint32 commonElements;
         uint256 tokenToAssign;
@@ -260,7 +257,7 @@ contract LotteryTry {
                 emit Prize(players[i].addr, tokenToAssign, class);
             }
         }
-        round.finished = true; // end the round
+        round = 0; // end the round
         delete players; // clear players array
     }
 
@@ -287,7 +284,7 @@ contract LotteryTry {
     Function to withdraw the revenue of the tickets
     */
     function withdraw(address addr) public onlyManager {
-        require(round.finished, "can't withdraw if round is not finished");
+        require(round == 0, "can't withdraw if round is not finished");
         emit Revenues(address(this).balance);
         payable(addr).transfer(address(this).balance);
     }
@@ -300,13 +297,12 @@ contract LotteryTry {
     */
     function closeLottery() public onlyManager {
         require(lotteryUp, "Lottery already closed");
-        if (!round.finished) {
+        if (round != 0) {
             for (uint32 i = 0; i < players.length; i++) {
                 payable(players[i].addr).transfer(0.00061 ether);
             }
         }
-        round.active = false;
-        round.finished = true;
+        round = 0;
         if (players.length > 0) delete players;
         lotteryUp = false;
         emit LotteryClosed();
@@ -364,12 +360,8 @@ contract LotteryTry {
         playerPrize[_to].push(temp);
     }
 
-    function getRoundState() public view returns (bool) {
-        return (round.active);
-    }
-
-    function getRoundStateFinished() public view returns (bool) {
-        return (round.finished);
+    function getRoundState() public view returns (uint8) {
+        return (round);
     }
 
     function getM() public view returns (uint32) {
@@ -394,6 +386,7 @@ contract LotteryTry {
         return (result);
     }
 
+    // returns the number of tickets of the player
     function getNumTicketsByPlayer() public view returns (uint32) {
         uint32 result;
         for (uint32 i = 0; i < players.length; i++) {

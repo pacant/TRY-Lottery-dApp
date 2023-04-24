@@ -47,13 +47,11 @@ App = {
         App.contracts["Contract"].deployed().then(async (instance) => {
             // catch events here
             instance.RoundState().on('data', function (event) {
-                console.log("Event RoundState");
                 if (!App.manager_account) {
-                    console.log("Round state is " + event.returnValues.round_state);
                     if (event.returnValues.round_state) alert("Round started");
                     else alert("Round closed");
+                    window.location.reload();
                 }
-                window.location.reload();
             });
 
             instance.LotteryCreated().on('data', function (event) {
@@ -81,7 +79,6 @@ App = {
                     window.location.reload();
                 }
                 else {
-                    console.log("user won");
                     alert("User " + event.returnValues.addr + " won a NFT of class " + event.returnValues.class);
 
                 }
@@ -101,6 +98,8 @@ App = {
         });
         return App.selectAccount();
     },
+
+    // detect if manager account or not
     selectAccount: function () {
         App.contracts["Contract"].deployed().then(async (instance) => {
             const manager = await instance.manager();
@@ -114,6 +113,8 @@ App = {
         });
 
     },
+
+    // render the interface
     render: function () {
         // render the page
         if (App.manager_account) {
@@ -138,12 +139,11 @@ function renderRoundState() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             const rState = await instance.getRoundState({ from: App.account });
-            const rState_finished = await instance.getRoundStateFinished({ from: App.account });
-            if (rState_finished) { // wating for the start of new round
+            if (rState == 0) { // wating for the start of new round
                 $("#round_state").html('Round: ' + "finished");
                 $("#round_state_m").html('Round: ' + "finished");
             }
-            else if (rState) { // user can buy ticket
+            else if (rState == 1) { // user can buy ticket
                 $("#round_state").html('Round: ' + "active");
                 $("#round_state_m").html('Round: ' + "active");
             }
@@ -159,6 +159,8 @@ function renderRoundState() {
         }
     });
 }
+
+// calls the contract getter for reading the lottery state
 function renderLotteryState() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -185,8 +187,8 @@ function renderLotteryState() {
         }
     });
 }
+// // calls the contract getter for reading the number of total tickets 
 function renderTickets() {
-    // render number of total tickets 
 
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -204,6 +206,7 @@ function renderTickets() {
     //render single user tickets
     getTickets();
 }
+// calls the contract getter for reading the winning ticket
 function renderWinningNumbers() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -218,6 +221,8 @@ function renderWinningNumbers() {
         }
     });
 }
+// calls the contract getter for reading the user prizes (the images    )
+// same mechanism of retrieving tickets! 
 function renderPrize() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -246,11 +251,12 @@ function createLottery() {
             console.log(error.message);
             $('#error').html(error.message);
             $('#error').show().delay(5000).fadeOut();
+
         }
     });
 }
+// start a new round
 function startNewRound() {
-    // functions of the contract
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             await instance.startNewRound({ from: App.account });
@@ -263,7 +269,7 @@ function startNewRound() {
         }
     });
 }
-
+// buy the ticket for the user
 function buyTicket() {
     const ticket_string = document.getElementById("input_ticket").value;
     const ticket = ticket_string.split(",").map(Number);
@@ -279,6 +285,7 @@ function buyTicket() {
         }
     });
 }
+// selecting winners according to winning ticket
 function givePrizes() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -291,7 +298,7 @@ function givePrizes() {
         }
     });
 }
-
+// extracting the winning ticket
 function drawNumbers() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -306,6 +313,8 @@ function drawNumbers() {
         }
     });
 }
+// get tickets for that specific user:
+// first it retrieves the number of ticket that the user has, and then for each one retrieves that single ticket and appends it to the list
 function getTickets() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -322,6 +331,7 @@ function getTickets() {
         }
     });
 }
+// close the lottery
 function closeLottery() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
@@ -335,6 +345,7 @@ function closeLottery() {
         }
     });
 }
+// manager withdraw the revenues
 function withdraw() {
 
     App.contracts["Contract"].deployed().then(async (instance) => {
@@ -349,4 +360,4 @@ function withdraw() {
     });
 }
 // Call init whenever the window loads
-window.onload = App.init();
+window.onload = App.init(); 

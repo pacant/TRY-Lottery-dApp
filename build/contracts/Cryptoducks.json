@@ -14731,12 +14731,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x94d24bb717e2Ba3F939B3940022a1Bf808EB4a5C",
-      "transactionHash": "0x4ec3f2d7f481c6b16f702f88b0246821ce960733a62c9a242f7d4ff57d912cbf"
+      "address": "0xD2EDc8562c7D2E363b533E936AfBB2E1949f7098",
+      "transactionHash": "0x7671457108eeee4d125fea825cb576af768db1e1fe6ba672439b4987261b06c8"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2023-03-20T14:28:36.976Z",
+  "updatedAt": "2023-04-24T12:29:49.033Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "This is an example contract implementation of NFToken with metadata extension.",
