@@ -245,7 +245,7 @@ function createLottery() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             await instance.createLottery(m, { from: App.account });
-            window.location.replace("lottery.html");
+            if (App.manager_account) window.location.replace("lottery.html");
         }
         catch (error) {
             console.log(error.message);
@@ -260,7 +260,7 @@ function startNewRound() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             await instance.startNewRound({ from: App.account });
-            window.location.reload();
+            if (App.manager_account) window.location.reload();
         }
         catch (error) {
             console.log(error.message);
@@ -303,7 +303,7 @@ function drawNumbers() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             await instance.drawNumbers({ from: App.account });
-            window.location.reload();
+            if (App.manager_account) window.location.reload();
         }
         catch (error) {
             console.log(error.message);
@@ -336,7 +336,7 @@ function closeLottery() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             await instance.closeLottery({ from: App.account });
-            window.location.reload();
+            if (App.manager_account) window.location.reload();
         }
         catch (error) {
             console.log(error.message);
