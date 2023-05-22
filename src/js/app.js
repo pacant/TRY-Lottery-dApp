@@ -47,11 +47,9 @@ App = {
         App.contracts["Contract"].deployed().then(async (instance) => {
             // catch events here
             instance.RoundState().on('data', function (event) {
-                if (!App.manager_account) {
-                    if (event.returnValues.round_state) alert("Round started");
-                    else alert("Round closed");
-                    window.location.reload();
-                }
+                if (event.returnValues.round_state) alert("Round started");
+                else alert("Round closed");
+                window.location.reload();
             });
 
             instance.LotteryCreated().on('data', function (event) {
@@ -76,12 +74,13 @@ App = {
             instance.Prize().on('data', function (event) {
                 if (event.returnValues.addr.toLowerCase() == App.account) {
                     alert("YOU WON a NFT of class " + event.returnValues.class + ". TokenID = " + event.returnValues.token);
-                    window.location.reload();
                 }
                 else {
                     alert("User " + event.returnValues.addr + " won a NFT of class " + event.returnValues.class);
-
                 }
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             });
             instance.Revenues().on('data', function (event) {
                 if (App.manager_account) {
@@ -173,8 +172,8 @@ function renderLotteryState() {
                 $("#enter_lottery").show();
             }
             else {
-                $("#lottery_state").html("Lottery state: closed");
-                $("#lottery_state_m").html("Lottery state: closed");
+                $("#lottery_state").html("Lottery: closed");
+                $("#lottery_state_m").html("Lottery: closed");
                 $("#player_lottery").html("Lottery is closed");
                 $("#home_button").show();
                 $("#enter_lottery").hide();
@@ -260,7 +259,6 @@ function startNewRound() {
     App.contracts["Contract"].deployed().then(async (instance) => {
         try {
             await instance.startNewRound({ from: App.account });
-            if (App.manager_account) window.location.reload();
         }
         catch (error) {
             console.log(error.message);
@@ -277,6 +275,7 @@ function buyTicket() {
         try {
             await instance.buy(ticket, { from: App.account, value: web3.utils.toWei("610000", "gwei") });
             window.location.reload();
+
         }
         catch (error) {
             console.log(error.message);
